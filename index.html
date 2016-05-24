@@ -1,0 +1,144 @@
+<html>
+	
+	<head>
+		
+		<title>Code Fiddle</title>
+		<script src="jquery.min.js"></script>
+		<style type="text/css">
+			
+			body {
+				font-family: sans-serif;
+				padding: 0;
+				margin: 0 auto;
+			}
+		
+			#header {
+				height: 40px;
+				width: 100%;
+				background-color: #EEEEEE;
+				border-top: 0px;
+			}
+			
+			#logo {
+				font-weight: bold;
+				font-size: 120%;
+				padding: 7px 0px 0px 4px;
+				float: left;
+			}
+			
+			#buttoncontainer {
+				width: 225px;
+				margin: 0 auto;
+				padding: 5px;
+			}
+			
+			.buttons {
+				float: left;
+				border: 1px solid grey;
+				border-right: none;
+				font-size: 90%;
+				padding: 5px;
+			}
+			
+			#html {
+				border-top-left-radius:5px;
+				border-bottom-left-radius: 5px;
+			}
+			
+			#output {
+				border-top-right-radius: 5px;
+				border-bottom-right-radius: 5px;
+				border-right: 1px solid grey;
+			}
+			
+			.highlightedbutton {
+				background-color: #E6F4F4;
+			}
+			
+			.active {
+				background-color: #E8F2FF;
+			}
+			
+			textarea {
+				resize: none;
+				border-top: none;
+				border-color: grey;
+			}
+			
+			.panel {
+				float: left;
+				width: 50%;
+				border-left: none;
+			}
+			
+			iframe {
+				border-left: none;
+				border-top: none;
+			}
+			
+			.hidden{
+				display: none;
+			}
+			
+		</style>
+		
+	</head>
+	
+	<body>
+		
+		<div id="header">
+			<div id="logo">Code Fiddle</div>
+			<div id="buttoncontainer">
+				<div class="buttons active" id="html">HTML</div>
+				<div class="buttons" id="css">CSS</div>
+				<div class="buttons" id="javascript">JavaScript</div>
+				<div class="buttons active" id="output">Output</div>
+			</div>
+		</div>
+		<div id="bodycontainer">
+			<textarea id="htmlpanel" class ="panel"><p id="para">Hello World!!</p></textarea>
+			<textarea id="csspanel" class ="panel hidden">p { color: blue; }</textarea>
+			<textarea id="javascriptpanel" class ="panel hidden">document.getElementById("para").innerHTML = "Hello Mohith"; </textarea>
+			<iframe id="outputpanel" class ="panel"></iframe>
+		</div>
+		
+		<script type="text/javascript">
+			
+			function updateOutput() {
+				$("iframe").contents().find("html").html("<html><head><style type='text/css'>" 
+				+ $("#csspanel").val() + "</style></head><body>" 
+				+ $("#htmlpanel").val() + "</body></html>");
+				document.getElementById("outputpanel").contentWindow.eval($("#javascriptpanel").val());
+			}
+			
+			$(".buttons").hover(function (){
+				$(this).addClass("highlightedbutton");
+			}, function (){
+				$(this).removeClass("highlightedbutton");
+			}); 
+			
+			$(".buttons").click(function () {
+				$(this).toggleClass("active");
+				$(this).removeClass("highlightedbutton");
+				var panelId = $(this).attr("id") + "panel";
+				$("#" + panelId).toggleClass("hidden");
+				var activePanels = 4 - $(".hidden").length;
+				$(".panel").width(($(window).width()/activePanels)-10);
+				
+			})
+			
+			$(".panel").height($(window).height() - $("#header").height());
+			
+			$(".panel").width(($(window).width()/2)-10);
+			
+			updateOutput();
+			
+			$("textarea").on('change keyup paste', function(){
+				updateOutput();
+			});
+			
+		</script>
+		
+	</body>
+	
+</html>
